@@ -17,8 +17,8 @@ const smartSettings = {
   clientId: "my-client-id",
   redirectUri: "/app",
   scope: "launch/patient patient/*.read openid fhirUser",
-  iss: "https://r4.smarthealthit.org/v/r4",
-  // iss: "https://launch.smarthealthit.org/v/r2/sim/eyJrIjoiMSIsImIiOiJzbWFydC03Nzc3NzA1In0/fhir",
+  // iss: "https://r4.smarthealthit.org/v/r4",
+  iss: "https://launch.smarthealthit.org/v/r2/sim/eyJrIjoiMSIsImIiOiJzbWFydC03Nzc3NzA1In0/fhir",
 };
 
 // =============================================================================
@@ -61,6 +61,10 @@ app.get("/app", (req, res) => {
     .catch((e) => {
       console.log(e);
     });
+});
+
+app.get("/welcome", (req, res) => {
+  res.redirect("https://wp.pl");
 });
 
 app.listen(8080);
