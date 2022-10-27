@@ -1,15 +1,11 @@
-import smart from "fhirclient";
 import express from "express";
 import fetch from "node-fetch";
-import axios from "axios";
 
 const app = express();
 
-const api = axios.create();
-
 let tokenEndpoint = "";
 
-app.get("/launch", async (req, res, next) => {
+app.get("/launch", async (req, res) => {
   const { launch, iss } = req.query;
 
   const smartConfigRes = await fetch(`${iss}/.well-known/smart-configuration`, {
@@ -44,22 +40,22 @@ app.get("/launch", async (req, res, next) => {
 app.get("/app", async (req, res) => {
   const { code } = req.query;
 
-  const { data } = await api.post(
-    tokenEndpoint,
-    {
+  const tokenRes = await fetch(tokenEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
       grant_type: "authorization_code",
       code,
       redirect_uri: encodeURI("http://localhost:8080/app"),
       client_id: "web application's client ID issued by Epic",
-    },
-    {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    }
-  );
+    }),
+  });
 
-  res.type("json").send(JSON.stringify(data, null, 2));
+  const tokenJson = await tokenRes.json();
+
+  res.type("json").send(JSON.stringify(tokenJson, null, 2));
 });
 
 app.listen(8080);
