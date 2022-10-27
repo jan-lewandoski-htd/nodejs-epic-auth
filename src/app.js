@@ -5,6 +5,7 @@ const app = express();
 
 let tokenEndpoint = "";
 
+// App entry point
 app.get("/launch", async (req, res) => {
   const { launch, iss } = req.query;
 
